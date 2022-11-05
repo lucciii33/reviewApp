@@ -1,26 +1,42 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext";
 import rigoImageUrl from "../../img/rigo-baby.jpg";
 import "../../styles/home.css";
+import { Link, useParams, useLocation } from "react-router-dom";
+import { Card } from "../component/card";
+import PropTypes from "prop-types";
 
-export const Home = () => {
+export const Home = ({ data }) => {
 	const { store, actions } = useContext(Context);
+	const params = useParams();
+	// var data = store.rests
+	useEffect(() => {
+
+	}, [])
+	// console.log(data)
 
 	return (
 		<div className="text-center mt-5">
-			<h1>Hello Rigo!!</h1>
-			<p>
-				<img src={rigoImageUrl} />
-			</p>
-			<div className="alert alert-info">
-				{store.message || "Loading message from the backend (make sure your python backend is running)..."}
-			</div>
-			<p>
-				This boilerplate comes with lots of documentation:{" "}
-				<a href="https://github.com/4GeeksAcademy/react-flask-hello/tree/95e0540bd1422249c3004f149825285118594325/docs">
-					Read documentation
-				</a>
-			</p>
+			<h1>pick a restaurante to review</h1>
+
+			{store.rests
+				? store.rests.map((data, index) => (
+					<Card
+						data={{
+							data,
+							// name: item.rest_name,
+							// address: item.rest_address,
+							// image: item.rest_image,
+							// id: item.id
+						}}
+						key={index}
+					/>
+				))
+				: "loading"}
 		</div>
 	);
+};
+
+Home.propTypes = {
+	match: PropTypes.object
 };
