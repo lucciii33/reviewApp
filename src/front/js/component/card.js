@@ -13,7 +13,7 @@ export const Card = ({ data }) => {
 					<h5 className="card-title">{data.data.rest_name}</h5>
 					<p className="card-text">{data.data.rest_address}</p>
 
-					<Link to={{ pathname: "information/" + data.name, state: data }} className="text-decoration-none">
+					<Link to={{ pathname: "information/" + data.data.id, state: { ...data } }} className="text-decoration-none">
 						<button className="button-24 ">
 							See Instructions
 						</button>
