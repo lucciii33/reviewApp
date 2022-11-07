@@ -13,6 +13,12 @@ export const Information = () => {
 	const { store, actions } = useContext(Context);
 	const params = useParams()
 
+	const [sendReview, setSendReview] = useState({ rest_name: "", review: "", rating: "" });
+	const handleChange = e => {
+		setSendReview({ ...sendReview, [e.target.name]: e.target.value });
+
+	};
+
 
 	useEffect(() => {
 		const info = store.rests.find((item) => {
@@ -26,6 +32,10 @@ export const Information = () => {
 	console.log(params.id)
 	const [data, setData] = useState({})
 	console.log(data)
+
+	useEffect(() => {
+		actions.getReviewId(data.id)
+	}, [])
 	// const { image, name, address } = useParams();
 
 	return (
@@ -43,6 +53,33 @@ export const Information = () => {
 					Back home
 				</span>
 			</Link>
+
+			<div>
+				<h3>Leave us a review</h3>
+				<input placeholder="restaurant name"
+					value={sendReview.rest_name}
+					name="rest_name"
+					onChange={handleChange} />
+				<input placeholder="review"
+					value={sendReview.review}
+					name="review"
+					onChange={handleChange} />
+				<input placeholder="rating"
+					value={sendReview.rating}
+					name="rating"
+					onChange={handleChange} />
+				<button onClick={() => actions.postReviewId(sendReview.rest_name, sendReview.review, sendReview.rating, data.id)}>send review</button>
+			</div>
+
+			<div>
+				{store.reviewId.map((review) => {
+					return (
+						<div>
+							<h1>{review.review}</h1>
+						</div>
+					)
+				})}
+			</div>
 		</div >
 	);
 };
