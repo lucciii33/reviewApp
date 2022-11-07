@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User,Restaurant
+from api.models import db, User,Restaurant, Review
 from api.utils import generate_sitemap, APIException
 
 api = Blueprint('api', __name__)
@@ -51,8 +51,8 @@ def post_review():
     review = body['review']
     rating = body['rating']
     review_exist = Review.query.filter_by(rest_name=rest_name).first()
-    if rest_exist is not None:
-        raise APIException("rest already exist", 400)
+    # if rest_exist is not None:
+    #     raise APIException("rest already exist", 400)
     review = Review(rest_name=rest_name, review=review, rating=rating,  )
     db.session.add(review)
     db.session.commit()
@@ -73,21 +73,23 @@ def get_review():
 @api.route('/rest/review/<int:id>', methods=['GET'])
 def get_review_id(id):
     # id = get_jwt_identity()
-    review_query = Review.query.filter_by(id)
-
+    review_query = Review.query.filter_by(rest_id = id).first()
+    # id_review = list(map(lambda x: x.serialize(), review_query))
     
     return jsonify(review_query.serialize()), 200
 
 @api.route('/rest/review/<int:id>', methods=['POST'])
-def post_review_id():
+def post_review_id(id):
     body = request.json
 
-    review_id = Review(rest_name=body['rest_name'], review=body['review'],rating=body['rating'])
+    review_id = Review(rest_name=body['rest_name'], review=body['review'],rating=body['rating'], rest_id=id)
 
     db.session.add(review_id)
     db.session.commit()
 
+    # reviews_list = []
     review = Review.query.filter_by(rest_id = id)
+    # reviews_list.append({review})
     all_reviews= list(map(lambda x: x.serialize(), review))
     
 
